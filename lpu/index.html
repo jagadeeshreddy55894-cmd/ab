@@ -384,72 +384,47 @@ if (savedColor) {
 }
 
 
-function openColorPicker() {
+function askForColor() {
 
-    const colorPicker = document.createElement("input");
-
-    colorPicker.type = "color";
-
-    colorPicker.value =
+    const currentColor =
         localStorage.getItem("messPassColor") || defaultColor;
 
-    colorPicker.style.position = "fixed";
-    colorPicker.style.left = "50%";
-    colorPicker.style.top = "50%";
-    colorPicker.style.width = "40px";
-    colorPicker.style.height = "40px";
-    colorPicker.style.opacity = "1";
-    colorPicker.style.zIndex = "999999";
+    const color = prompt(
+        "Enter HTML color code:\n\nExample: #FF0000",
+        currentColor
+    );
 
-    document.body.appendChild(colorPicker);
-
-    colorPicker.addEventListener("input", function () {
-
-        brownBox.style.backgroundColor = this.value;
-
-        localStorage.setItem(
-            "messPassColor",
-            this.value
-        );
-
-    });
-
-    colorPicker.addEventListener("change", function () {
-
-        brownBox.style.backgroundColor = this.value;
-
-        localStorage.setItem(
-            "messPassColor",
-            this.value
-        );
-
-        setTimeout(function () {
-
-            if (colorPicker.parentNode) {
-                colorPicker.remove();
-            }
-
-        }, 500);
-
-    });
-
-    try {
-
-        if (colorPicker.showPicker) {
-
-            colorPicker.showPicker();
-
-        } else {
-
-            colorPicker.click();
-
-        }
-
-    } catch (error) {
-
-        colorPicker.click();
-
+    if (color === null) {
+        return;
     }
+
+    const newColor = color.trim();
+
+    /*
+       Check whether the entered value
+       is a valid HTML/CSS color.
+    */
+
+    const test = new Option().style;
+
+    test.color = newColor;
+
+    if (test.color === "") {
+
+        alert(
+            "Invalid color code!\n\nPlease enter a valid HTML color code.\nExample: #FF0000"
+        );
+
+        return;
+    }
+
+    brownBox.style.backgroundColor = newColor;
+
+    localStorage.setItem(
+        "messPassColor",
+        newColor
+    );
+
 }
 
 
@@ -472,14 +447,14 @@ function registerTap() {
 
         clearTimeout(tapTimer);
 
-        openColorPicker();
+        askForColor();
 
     }
 
 }
 
 
-/* Android / iPhone */
+/* Mobile */
 
 brownBox.addEventListener(
     "touchend",
@@ -496,7 +471,7 @@ brownBox.addEventListener(
 );
 
 
-/* Laptop / Desktop */
+/* Laptop/Desktop */
 
 brownBox.addEventListener(
     "click",
